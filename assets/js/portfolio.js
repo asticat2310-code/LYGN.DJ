@@ -30,14 +30,16 @@
 
   function wire() {
     var lb = document.getElementById("lightbox");
+    var stage = document.getElementById("lightboxStage");
     var video = document.getElementById("lightboxVideo");
     var close = document.getElementById("lightboxClose");
     var grid = document.getElementById("videoGrid");
-    if (!lb || !video || !grid) return;
+    if (!lb || !stage || !video || !close || !grid) return;
 
     function open(src) {
       video.src = src;
       lb.classList.add("is-open");
+      stage.classList.remove("is-paused");
       document.body.style.overflow = "hidden";
       var p = video.play();
       if (p && p.catch) p.catch(function () {});
@@ -48,6 +50,10 @@
       video.removeAttribute("src");
       video.load();
       document.body.style.overflow = "";
+    }
+    function toggle() {
+      if (video.paused) video.play();
+      else video.pause();
     }
 
     grid.addEventListener("click", function (e) {
@@ -63,6 +69,17 @@
         }
       }
     });
+
+    // No native <video controls> (its close/fullscreen chrome differs per OS and
+    // isn't ours to style) — tap the video to play/pause, use our own close button.
+    video.addEventListener("click", toggle);
+    video.addEventListener("play", function () {
+      stage.classList.remove("is-paused");
+    });
+    video.addEventListener("pause", function () {
+      stage.classList.add("is-paused");
+    });
+
     close.addEventListener("click", shut);
     lb.addEventListener("click", function (e) {
       if (e.target === lb) shut();

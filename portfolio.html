@@ -40,8 +40,18 @@
 
     <!-- Lightbox player -->
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-      <button class="lightbox__close" id="lightboxClose" aria-label="Close">×</button>
-      <video id="lightboxVideo" controls playsinline preload="metadata"></video>
+      <button class="lightbox__close" id="lightboxClose" aria-label="Close"></button>
+      <div class="lightbox__stage" id="lightboxStage">
+        <video
+          id="lightboxVideo"
+          playsinline
+          webkit-playsinline="true"
+          disablePictureInPicture
+          disableRemotePlayback
+          preload="metadata"
+        ></video>
+        <div class="lightbox__hint" id="lightboxHint" aria-hidden="true"><span></span></div>
+      </div>
     </div>
 
     <script src="assets/js/i18n.js"></script>
