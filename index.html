@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="DJ LYGN — DJ & Producer. 10+ years in the event industry: open-air festivals, night clubs and bars. Booking worldwide." />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <title>LYGN — DJ / Producer</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.169.0/build/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- NAV -->
+    <header class="nav">
+      <a href="#top" class="nav__logo" aria-label="LYGN home">LYGN<span>DJ</span></a>
+      <nav class="nav__links">
+        <a href="portfolio.html" data-i18n="nav.projects">Portfolio</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+        <button class="lang" id="langToggle" type="button" aria-label="Switch language">
+          <span data-lang="en">EN</span><span class="lang__sep">/</span><span data-lang="vi">VI</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="top" class="hero">
+      <div class="hero__canvas" id="heroCanvas" aria-hidden="true"></div>
+      <div class="hero__veil"></div>
+
+      <div class="hero__copy">
+        <h1 class="hero__title">LYGN</h1>
+        <p class="hero__sub" data-i18n="hero.role">DJ / Producer</p>
+      </div>
+
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track" id="marqueeTrack"></div>
+      </div>
+
+      <div class="hero__foot">
+        <div class="socials" id="heroSocials"></div>
+        <a class="hero__scroll" href="#portfolio" data-i18n="hero.scroll">Scroll ↓</a>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO TEASER -->
+    <section id="portfolio" class="folio">
+      <div class="folio__grid">
+        <img class="folio__img" src="photo_2026-09-07_01-52-43.jpg" alt="DJ LYGN" loading="lazy" />
+        <img class="folio__img folio__img--tall" src="photo_2026-09-07_01-56-55.jpg" alt="DJ LYGN performing" loading="lazy" />
+        <img class="folio__img" src="photo_2026-09-07_01-57-09.jpg" alt="DJ LYGN behind the decks" loading="lazy" />
+      </div>
+
+      <div class="folio__body">
+        <h2 class="section__title" data-i18n="folio.title">MY PORTFOLIO</h2>
+        <p class="section__lead" data-i18n="folio.lead">
+          DJ LYGN has spent more than 10 years behind the decks — from open-air festivals to
+          night clubs and bars. A versatile selector moving fluidly across genres, LYGN reads the
+          room and keeps the floor moving from the first track to the last.
+        </p>
+        <div class="folio__actions">
+          <a class="btn btn--solid" href="portfolio.html" data-i18n="folio.watch">Watch videos</a>
+          <a class="btn" href="#contact" data-i18n="folio.book">Book a set</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact">
+      <div class="contact__left">
+        <h2 class="section__title" data-i18n="contact.title">CONTACT</h2>
+        <p class="section__lead" data-i18n="contact.lead">
+          DJ LYGN — 10+ years in the event industry, performing at open-air festivals, night clubs
+          and bars. Available for bookings, private events and collaborations. Reach out on any
+          channel below.
+        </p>
+        <div class="chips">
+          <p class="chips__label" data-i18n="contact.styles">Styles</p>
+          <div class="chips__list" id="stylesList"></div>
+        </div>
+      </div>
+
+      <div class="contact__right" id="contactChannels"></div>
+    </section>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> LYGN · <span data-i18n="hero.role">DJ / Producer</span></span>
+    </footer>
+
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/hero.js"></script>
+  </body>
+</html>

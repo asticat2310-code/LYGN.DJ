@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="DJ LYGN — video portfolio. Live sets & highlights from festivals, clubs and bars." />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <title>Portfolio — LYGN</title>
+  </head>
+  <body>
+    <header class="nav">
+      <a href="index.html#top" class="nav__logo" aria-label="LYGN home">LYGN<span>DJ</span></a>
+      <nav class="nav__links">
+        <a href="index.html#portfolio" data-i18n="nav.projects">Portfolio</a>
+        <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
+        <button class="lang" id="langToggle" type="button" aria-label="Switch language">
+          <span data-lang="en">EN</span><span class="lang__sep">/</span><span data-lang="vi">VI</span>
+        </button>
+      </nav>
+    </header>
+
+    <main class="page">
+      <div class="page__head">
+        <a class="page__back" href="index.html" data-i18n="page.back">Back to home</a>
+        <h1 class="section__title" data-i18n="page.title">PORTFOLIO</h1>
+        <p class="page__sub" data-i18n="page.sub">Live sets &amp; highlights — tap any clip to play.</p>
+      </div>
+
+      <div class="videos" id="videoGrid"></div>
+      <p class="folio__hint" data-i18n="page.hint">More sets available on request.</p>
+    </main>
+
+    <!-- Lightbox player -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+      <button class="lightbox__close" id="lightboxClose" aria-label="Close">×</button>
+      <video id="lightboxVideo" controls playsinline preload="metadata"></video>
+    </div>
+
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/portfolio.js"></script>
+  </body>
+</html>

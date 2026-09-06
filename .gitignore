@@ -1,0 +1,12 @@
+# dependencies / build (not used by this static site, but ignored just in case)
+node_modules
+dist
+.vite
+*.local
+.DS_Store
+
+# original phone clips (source only — the site uses portfolio/*.mp4)
+video/
+
+# helper logs
+build_videos.log
