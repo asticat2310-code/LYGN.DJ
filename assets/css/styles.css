@@ -211,42 +211,61 @@ a { color: inherit; text-decoration: none; }
   max-width: var(--maxw);
   margin: 0 auto;
 }
+/* Photo row — same 3-across / bigger-center layout on every screen size.
+   Sizing is aspect-ratio based (not a fixed px height) so the three narrow
+   mobile columns stay well-proportioned; the desktop media query below
+   swaps in the original fixed heights for wider columns. */
 .folio__grid {
-  display: none; /* mobile: fixed video row takes over, see .folio__videos below */
-  grid-template-columns: 1fr;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  align-items: center;
+  margin: 4px 0 8px;
 }
 .folio__img {
   width: 100%;
-  height: 260px;
+  height: auto;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   object-position: center;
   filter: grayscale(1);
   transition: filter 0.6s ease;
 }
 .folio__img:hover { filter: grayscale(0); }
+.folio__img--tall { aspect-ratio: 3 / 5; margin-top: -16px; }
 /* Keep each DJ's face centred in the crop (esp. on mobile, where photos crop vertically) */
 .folio__grid .folio__img:nth-child(1) { object-position: 50% 8%; }
 .folio__grid .folio__img:nth-child(2) { object-position: 60% 52%; }
 .folio__grid .folio__img:nth-child(3) { object-position: 62% 18%; }
 
-/* Mobile: static 3-across video row in place of the photo grid — same "normal /
-   bigger center / normal" layout as the desktop photo grid, just with videos and
-   no swipe. Tapping any of the three opens the shared lightbox player. */
-.folio__videos {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  align-items: center;
-  margin: 10px 0 8px;
+/* Mobile: swipeable 3-video coverflow carousel above the photo row. Active
+   (center) card is bigger, the two neighbors are smaller and peek from the
+   sides; drag/swipe loops forever in both directions. */
+.folio__carousel {
+  position: relative;
+  height: 92vw;
+  max-height: 420px;
+  margin: 4px -20px 14px;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
 }
-.folio__videos .vcard__label { font-size: 9px; letter-spacing: 0.18em; }
-.folio__videos .vcard--center {
-  aspect-ratio: 9 / 20;
-  margin-top: -20px;
-  z-index: 2;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+.folio__carousel:active { cursor: grabbing; }
+.folio__track {
+  position: absolute;
+  inset: 0;
 }
+.folio__carousel .vcard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44vw;
+  max-width: 200px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.folio__carousel .vcard img { pointer-events: none; -webkit-user-drag: none; }
 .folio__body {
   margin-top: 48px;
   display: flex;
@@ -406,16 +425,6 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 10px solid transparent;
   margin-left: 4px;
 }
-.vcard__label {
-  position: absolute;
-  left: 14px;
-  bottom: 12px;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: rgba(255, 255, 255, 0.85);
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
-}
 
 .folio__hint {
   margin-top: 40px;
@@ -529,9 +538,9 @@ a { color: inherit; text-decoration: none; }
   .nav__links { gap: 30px; font-size: 12px; }
   .folio, .contact, .footer, .page { padding-left: 32px; padding-right: 32px; }
   .folio { padding-top: 110px; padding-bottom: 110px; }
-  .folio__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: center; }
-  .folio__videos { display: none; }
-  .folio__img { height: 300px; }
+  .folio__grid { gap: 20px; }
+  .folio__carousel { display: none; }
+  .folio__img { height: 300px; aspect-ratio: auto; }
   .folio__img--tall { height: 400px; margin-top: -34px; }
   .contact { padding-top: 110px; }
   .videos { grid-template-columns: repeat(2, 1fr); gap: 20px; }

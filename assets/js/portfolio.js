@@ -1,29 +1,28 @@
-/* Video portfolio: renders the fixed 3-video mobile home block (index.html),
-   the full gallery grid on the dedicated portfolio page (portfolio.html), and
-   wires the shared lightbox player used by both.
+/* Video portfolio: renders the swipeable 3-video mobile carousel on the home
+   page (index.html), the full gallery grid on the dedicated portfolio page
+   (portfolio.html), and wires the shared lightbox player used by both.
    Files live in /portfolio as <name>.mp4 with a matching <name>.jpg poster.
    Generate them from the phone clips with convert.bat (see /portfolio/README.txt). */
 (function () {
-  // The 3 videos featured on the mobile home page: center is the main/hero
-  // clip, left/right are the two clips the client added named "2" and "1".
-  var HOME_CENTER = { src: "portfolio/clip-1.mp4", poster: "portfolio/clip-1.jpg", label: "Set 1" };
-  var HOME_LEFT = { src: "portfolio/new-2.mp4", poster: "portfolio/new-2.jpg", label: "Set 2" };
-  var HOME_RIGHT = { src: "portfolio/new-1.mp4", poster: "portfolio/new-1.jpg", label: "Set 3" };
+  // The 3 videos featured on the mobile home carousel (center is the main clip).
+  var HOME_LEFT = { src: "portfolio/new-2.mp4", poster: "portfolio/new-2.jpg" };
+  var HOME_CENTER = { src: "portfolio/clip-2.mp4", poster: "portfolio/clip-2.jpg" };
+  var HOME_RIGHT = { src: "portfolio/new-1.mp4", poster: "portfolio/new-1.jpg" };
 
   // Everything else lives on the dedicated portfolio page.
   var GALLERY_CLIPS = [
-    { src: "portfolio/clip-2.mp4", poster: "portfolio/clip-2.jpg", label: "Set 4" },
-    { src: "portfolio/clip-3.mp4", poster: "portfolio/clip-3.jpg", label: "Set 5" },
-    { src: "portfolio/clip-4.mp4", poster: "portfolio/clip-4.jpg", label: "Set 6" },
-    { src: "portfolio/clip-5.mp4", poster: "portfolio/clip-5.jpg", label: "Set 7" },
-    { src: "portfolio/clip-6.mp4", poster: "portfolio/clip-6.jpg", label: "Set 8" },
-    { src: "portfolio/clip-7.mp4", poster: "portfolio/clip-7.jpg", label: "Set 9" },
-    { src: "portfolio/clip-8.mp4", poster: "portfolio/clip-8.jpg", label: "Set 10" },
-    { src: "portfolio/clip-9.mp4", poster: "portfolio/clip-9.jpg", label: "Set 11" },
-    { src: "portfolio/clip-10.mp4", poster: "portfolio/clip-10.jpg", label: "Set 12" },
-    { src: "portfolio/clip-11.mp4", poster: "portfolio/clip-11.jpg", label: "Set 13" },
-    { src: "portfolio/clip-12.mp4", poster: "portfolio/clip-12.jpg", label: "Set 14" },
-    { src: "portfolio/clip-13.mp4", poster: "portfolio/clip-13.jpg", label: "Set 15" },
+    { src: "portfolio/clip-1.mp4", poster: "portfolio/clip-1.jpg" },
+    { src: "portfolio/clip-3.mp4", poster: "portfolio/clip-3.jpg" },
+    { src: "portfolio/clip-4.mp4", poster: "portfolio/clip-4.jpg" },
+    { src: "portfolio/clip-5.mp4", poster: "portfolio/clip-5.jpg" },
+    { src: "portfolio/clip-6.mp4", poster: "portfolio/clip-6.jpg" },
+    { src: "portfolio/clip-7.mp4", poster: "portfolio/clip-7.jpg" },
+    { src: "portfolio/clip-8.mp4", poster: "portfolio/clip-8.jpg" },
+    { src: "portfolio/clip-9.mp4", poster: "portfolio/clip-9.jpg" },
+    { src: "portfolio/clip-10.mp4", poster: "portfolio/clip-10.jpg" },
+    { src: "portfolio/clip-11.mp4", poster: "portfolio/clip-11.jpg" },
+    { src: "portfolio/clip-12.mp4", poster: "portfolio/clip-12.jpg" },
+    { src: "portfolio/clip-13.mp4", poster: "portfolio/clip-13.jpg" },
   ];
 
   var PHOTOS = [
@@ -32,12 +31,12 @@
     { src: "photo_2026-09-07_01-57-09.jpg", alt: "DJ LYGN behind the decks" },
   ];
 
+  // No visible label on any card — just a poster and a play icon.
   function videoCardHTML(c, extraClass) {
     return (
-      '<div class="vcard' + (extraClass ? " " + extraClass : "") + '" data-src="' + c.src + '" role="button" tabindex="0" aria-label="Play ' + c.label + '">' +
-      '<img src="' + c.poster + '" alt="' + c.label + '" loading="lazy" onerror="this.style.opacity=0" />' +
+      '<div class="vcard' + (extraClass ? " " + extraClass : "") + '" data-src="' + c.src + '" role="button" tabindex="0" aria-label="Play video">' +
+      '<img src="' + c.poster + '" alt="DJ LYGN live" loading="lazy" onerror="this.style.opacity=0" />' +
       '<div class="vcard__play"><span></span></div>' +
-      '<div class="vcard__label">' + c.label + "</div>" +
       "</div>"
     );
   }
@@ -50,14 +49,82 @@
     );
   }
 
-  // Fixed 3-video row on the mobile home page: left / big-center / right, no swipe.
-  function renderHomeVideos() {
-    var host = document.getElementById("homeVideos");
-    if (!host) return;
-    host.innerHTML =
-      videoCardHTML(HOME_LEFT) +
-      videoCardHTML(HOME_CENTER, "vcard--center") +
-      videoCardHTML(HOME_RIGHT);
+  // Swipeable 3-video carousel on the mobile home page: bigger active card
+  // centered, smaller neighbors peeking on each side, loops both ways.
+  function initHomeCarousel() {
+    var root = document.getElementById("homeCarousel");
+    if (!root) return;
+    var clips = [HOME_LEFT, HOME_CENTER, HOME_RIGHT];
+    root.innerHTML = '<div class="folio__track" id="homeCarouselTrack"></div>';
+    var track = document.getElementById("homeCarouselTrack");
+    track.innerHTML = clips.map(function (c) { return videoCardHTML(c); }).join("");
+    var cards = Array.prototype.slice.call(track.children);
+    var len = cards.length;
+    var current = 1; // start centered on HOME_CENTER
+
+    function place() {
+      cards.forEach(function (el, i) {
+        var diff = i - current;
+        diff = ((diff % len) + len) % len;
+        if (diff > len / 2) diff -= len;
+        var abs = Math.abs(diff);
+        var scale = abs === 0 ? 1.18 : 0.82;
+        el.style.transform = "translate(-50%, -50%) translateX(" + diff * 38 + "vw) scale(" + scale + ")";
+        el.style.zIndex = abs === 0 ? 5 : 4;
+        el.classList.toggle("is-active", abs === 0);
+      });
+    }
+    function goto(i) {
+      current = ((i % len) + len) % len;
+      place();
+    }
+    function next() {
+      goto(current + 1);
+    }
+    function prev() {
+      goto(current - 1);
+    }
+
+    place();
+    window.addEventListener("resize", place);
+
+    // Drag / swipe — works with touch and mouse, loops forever either way.
+    // A tap on any of the 3 cards (centered or not) opens it directly via the
+    // shared click delegation in wire() below.
+    var dragging = false;
+    var startX = 0;
+    var dragPx = 0;
+    var THRESHOLD = 40;
+
+    function setTrackOffset(px, animate) {
+      track.style.transition = animate ? "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1)" : "none";
+      track.style.transform = "translateX(" + px + "px)";
+    }
+
+    root.addEventListener("pointerdown", function (e) {
+      dragging = true;
+      startX = e.clientX;
+      dragPx = 0;
+      setTrackOffset(0, false);
+      root.setPointerCapture(e.pointerId);
+    });
+    root.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      dragPx = e.clientX - startX;
+      setTrackOffset(dragPx, false);
+    });
+    function endDrag() {
+      if (!dragging) return;
+      dragging = false;
+      if (dragPx <= -THRESHOLD) next();
+      else if (dragPx >= THRESHOLD) prev();
+      setTrackOffset(0, true);
+    }
+    root.addEventListener("pointerup", endDrag);
+    root.addEventListener("pointercancel", endDrag);
+    root.addEventListener("pointerleave", function () {
+      if (dragging) endDrag();
+    });
   }
 
   // Dedicated portfolio page: every remaining video plus all photos.
@@ -97,8 +164,8 @@
     }
 
     // Delegate on the document so this works for both the portfolio-page grid
-    // (#videoGrid) and the home-page fixed 3-video row (#homeVideos). Photo
-    // cards are plain links (no data-src) so they're left to their default
+    // (#videoGrid) and any card in the home-page carousel (#homeCarousel).
+    // Photo cards are plain links (no data-src) so they keep their default
     // "open image in a new tab" behaviour.
     document.addEventListener("click", function (e) {
       var card = e.target.closest(".vcard[data-src]");
@@ -134,7 +201,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    renderHomeVideos(); // index.html mobile home teaser
+    initHomeCarousel(); // index.html mobile home carousel (3 videos)
     renderGallery(); // portfolio.html: everything else + photos
     wire();
   });
