@@ -212,7 +212,7 @@ a { color: inherit; text-decoration: none; }
   margin: 0 auto;
 }
 .folio__grid {
-  display: none; /* mobile: video carousel takes over, see .folio__carousel below */
+  display: none; /* mobile: fixed video row takes over, see .folio__videos below */
   grid-template-columns: 1fr;
   gap: 16px;
 }
@@ -230,36 +230,23 @@ a { color: inherit; text-decoration: none; }
 .folio__grid .folio__img:nth-child(2) { object-position: 60% 52%; }
 .folio__grid .folio__img:nth-child(3) { object-position: 62% 18%; }
 
-/* Mobile: infinite coverflow-style video carousel in place of the static photo grid.
-   Active (center) card is scaled up, neighbors are scaled down and peek from the
-   sides; JS (initHomeCarousel in portfolio.js) positions cards and handles the
-   circular, drag-both-ways swipe. */
-.folio__carousel {
-  position: relative;
-  height: 92vw;
-  max-height: 420px;
-  margin: 4px -20px 8px;
-  overflow: hidden;
-  touch-action: pan-y;
-  cursor: grab;
+/* Mobile: static 3-across video row in place of the photo grid — same "normal /
+   bigger center / normal" layout as the desktop photo grid, just with videos and
+   no swipe. Tapping any of the three opens the shared lightbox player. */
+.folio__videos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0 8px;
 }
-.folio__carousel:active { cursor: grabbing; }
-.folio__track {
-  position: absolute;
-  inset: 0;
+.folio__videos .vcard__label { font-size: 9px; letter-spacing: 0.18em; }
+.folio__videos .vcard--center {
+  aspect-ratio: 9 / 20;
+  margin-top: -20px;
+  z-index: 2;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
 }
-.folio__carousel .vcard {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 44vw;
-  max-width: 200px;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-.folio__carousel .vcard img { pointer-events: none; -webkit-user-drag: none; }
-.folio__carousel .vcard:not(.is-active) .vcard__play { opacity: 0.85; }
 .folio__body {
   margin-top: 48px;
   display: flex;
@@ -381,6 +368,7 @@ a { color: inherit; text-decoration: none; }
 }
 .vcard {
   position: relative;
+  display: block;
   aspect-ratio: 9 / 16;
   overflow: hidden;
   background: #0a0a0a;
@@ -542,7 +530,7 @@ a { color: inherit; text-decoration: none; }
   .folio, .contact, .footer, .page { padding-left: 32px; padding-right: 32px; }
   .folio { padding-top: 110px; padding-bottom: 110px; }
   .folio__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: center; }
-  .folio__carousel { display: none; }
+  .folio__videos { display: none; }
   .folio__img { height: 300px; }
   .folio__img--tall { height: 400px; margin-top: -34px; }
   .contact { padding-top: 110px; }
