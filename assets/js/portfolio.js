@@ -1,8 +1,9 @@
-/* Video portfolio grid + lightbox player.
+/* Video portfolio: renders the clip grid (portfolio.html) and/or the mobile
+   home-page carousel (index.html), plus the shared lightbox player.
    Files live in /portfolio as clip-N.mp4 with a matching clip-N.jpg poster.
    Generate them from the phone clips with convert.bat (see /portfolio/README.txt). */
 (function () {
-  // Display order (edit to reorder the grid): shows clip 2, 7, 1, 6, 5, 4, 3
+  // Display order (edit to reorder): shows clip 2, 7, 1, 6, 5, 4, 3
   var CLIPS = [
     { src: "portfolio/clip-2.mp4", poster: "portfolio/clip-2.jpg" },
     { src: "portfolio/clip-7.mp4", poster: "portfolio/clip-7.jpg" },
@@ -13,10 +14,10 @@
     { src: "portfolio/clip-3.mp4", poster: "portfolio/clip-3.jpg" },
   ];
 
-  function render() {
-    var grid = document.getElementById("videoGrid");
-    if (!grid) return;
-    grid.innerHTML = CLIPS.map(function (c, i) {
+  function renderInto(id) {
+    var host = document.getElementById(id);
+    if (!host) return;
+    host.innerHTML = CLIPS.map(function (c, i) {
       var n = i + 1;
       return (
         '<div class="vcard" data-src="' + c.src + '" role="button" tabindex="0" aria-label="Play set ' + n + '">' +
@@ -33,8 +34,7 @@
     var stage = document.getElementById("lightboxStage");
     var video = document.getElementById("lightboxVideo");
     var close = document.getElementById("lightboxClose");
-    var grid = document.getElementById("videoGrid");
-    if (!lb || !stage || !video || !close || !grid) return;
+    if (!lb || !stage || !video || !close) return;
 
     function open(src) {
       video.src = src;
@@ -56,11 +56,13 @@
       else video.pause();
     }
 
-    grid.addEventListener("click", function (e) {
+    // Delegate on the document so this works for both the portfolio-page grid
+    // (#videoGrid) and the home-page mobile carousel (#homeCarousel).
+    document.addEventListener("click", function (e) {
       var card = e.target.closest(".vcard");
       if (card) open(card.getAttribute("data-src"));
     });
-    grid.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") {
         var card = e.target.closest(".vcard");
         if (card) {
@@ -90,7 +92,8 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    render();
+    renderInto("videoGrid"); // portfolio.html grid
+    renderInto("homeCarousel"); // index.html mobile carousel
     wire();
   });
 })();

@@ -212,7 +212,7 @@ a { color: inherit; text-decoration: none; }
   margin: 0 auto;
 }
 .folio__grid {
-  display: grid;
+  display: none; /* mobile: video carousel takes over, see .folio__carousel below */
   grid-template-columns: 1fr;
   gap: 16px;
 }
@@ -229,6 +229,24 @@ a { color: inherit; text-decoration: none; }
 .folio__grid .folio__img:nth-child(1) { object-position: 50% 8%; }
 .folio__grid .folio__img:nth-child(2) { object-position: 60% 52%; }
 .folio__grid .folio__img:nth-child(3) { object-position: 62% 18%; }
+
+/* Mobile: swipeable video carousel in place of the static photo grid */
+.folio__carousel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin: 0 -20px;
+  padding: 4px 20px 6px;
+}
+.folio__carousel::-webkit-scrollbar { display: none; }
+.folio__carousel .vcard {
+  flex: 0 0 66%;
+  scroll-snap-align: center;
+}
+.folio__carousel .vcard:first-child { scroll-margin-left: 20px; }
 .folio__body {
   margin-top: 48px;
   display: flex;
@@ -510,7 +528,8 @@ a { color: inherit; text-decoration: none; }
   .nav__links { gap: 30px; font-size: 12px; }
   .folio, .contact, .footer, .page { padding-left: 32px; padding-right: 32px; }
   .folio { padding-top: 110px; padding-bottom: 110px; }
-  .folio__grid { grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: center; }
+  .folio__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: center; }
+  .folio__carousel { display: none; }
   .folio__img { height: 300px; }
   .folio__img--tall { height: 400px; margin-top: -34px; }
   .contact { padding-top: 110px; }

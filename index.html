@@ -58,11 +58,15 @@
 
     <!-- PORTFOLIO TEASER -->
     <section id="portfolio" class="folio">
+      <!-- Desktop/tablet: static photo grid -->
       <div class="folio__grid">
         <img class="folio__img" src="photo_2026-09-07_01-52-43.jpg" alt="DJ LYGN" loading="lazy" />
         <img class="folio__img folio__img--tall" src="photo_2026-09-07_01-56-55.jpg" alt="DJ LYGN performing" loading="lazy" />
         <img class="folio__img" src="photo_2026-09-07_01-57-09.jpg" alt="DJ LYGN behind the decks" loading="lazy" />
       </div>
+
+      <!-- Mobile: swipeable video carousel (filled by portfolio.js) -->
+      <div class="folio__carousel" id="homeCarousel"></div>
 
       <div class="folio__body">
         <h2 class="section__title" data-i18n="folio.title">MY PORTFOLIO</h2>
@@ -100,8 +104,25 @@
       <span>© <span id="year"></span> LYGN · <span data-i18n="hero.role">DJ / Producer</span></span>
     </footer>
 
+    <!-- Lightbox player (opened by the mobile video carousel above) -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+      <button class="lightbox__close" id="lightboxClose" aria-label="Close"></button>
+      <div class="lightbox__stage" id="lightboxStage">
+        <video
+          id="lightboxVideo"
+          playsinline
+          webkit-playsinline="true"
+          disablePictureInPicture
+          disableRemotePlayback
+          preload="metadata"
+        ></video>
+        <div class="lightbox__hint" id="lightboxHint" aria-hidden="true"><span></span></div>
+      </div>
+    </div>
+
     <script src="assets/js/i18n.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/portfolio.js"></script>
     <script type="module" src="assets/js/hero.js"></script>
   </body>
 </html>
