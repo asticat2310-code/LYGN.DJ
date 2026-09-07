@@ -230,23 +230,36 @@ a { color: inherit; text-decoration: none; }
 .folio__grid .folio__img:nth-child(2) { object-position: 60% 52%; }
 .folio__grid .folio__img:nth-child(3) { object-position: 62% 18%; }
 
-/* Mobile: swipeable video carousel in place of the static photo grid */
+/* Mobile: infinite coverflow-style video carousel in place of the static photo grid.
+   Active (center) card is scaled up, neighbors are scaled down and peek from the
+   sides; JS (initHomeCarousel in portfolio.js) positions cards and handles the
+   circular, drag-both-ways swipe. */
 .folio__carousel {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  margin: 0 -20px;
-  padding: 4px 20px 6px;
+  position: relative;
+  height: 92vw;
+  max-height: 420px;
+  margin: 4px -20px 8px;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
 }
-.folio__carousel::-webkit-scrollbar { display: none; }
+.folio__carousel:active { cursor: grabbing; }
+.folio__track {
+  position: absolute;
+  inset: 0;
+}
 .folio__carousel .vcard {
-  flex: 0 0 66%;
-  scroll-snap-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44vw;
+  max-width: 200px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+  user-select: none;
+  -webkit-user-drag: none;
 }
-.folio__carousel .vcard:first-child { scroll-margin-left: 20px; }
+.folio__carousel .vcard img { pointer-events: none; -webkit-user-drag: none; }
+.folio__carousel .vcard:not(.is-active) .vcard__play { opacity: 0.85; }
 .folio__body {
   margin-top: 48px;
   display: flex;
