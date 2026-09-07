@@ -211,41 +211,43 @@ a { color: inherit; text-decoration: none; }
   max-width: var(--maxw);
   margin: 0 auto;
 }
-/* Photo row — same 3-across / bigger-center layout on every screen size.
-   Sizing is aspect-ratio based (not a fixed px height) so the three narrow
-   mobile columns stay well-proportioned; the desktop media query below
-   swaps in the original fixed heights for wider columns. */
+/* Mobile: photo row and video carousel are sized identically — same overlapping
+   "normal / bigger center / normal" composition, same card footprint (44vw,
+   capped at 200px, 9:16 / 9:20 aspect ratios). The desktop media query below
+   swaps the photo row back to the original plain 3-column grid. */
 .folio__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  align-items: center;
-  margin: 4px 0 8px;
+  position: relative;
+  height: 92vw;
+  max-height: 420px;
+  margin: 4px -20px 28px;
 }
 .folio__img {
-  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44vw;
+  max-width: 200px;
   height: auto;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 9 / 16;
   object-fit: cover;
   object-position: center;
   filter: grayscale(1);
   transition: filter 0.6s ease;
 }
 .folio__img:hover { filter: grayscale(0); }
-.folio__img--tall { aspect-ratio: 3 / 5; margin-top: -16px; }
-/* Keep each DJ's face centred in the crop (esp. on mobile, where photos crop vertically) */
-.folio__grid .folio__img:nth-child(1) { object-position: 50% 8%; }
-.folio__grid .folio__img:nth-child(2) { object-position: 60% 52%; }
-.folio__grid .folio__img:nth-child(3) { object-position: 62% 18%; }
+/* Position each slot (left/center/right) and keep each DJ's face centred in the crop */
+.folio__grid .folio__img:nth-child(1) { transform: translate(-50%, -50%) translateX(-38vw) scale(0.82); z-index: 4; object-position: 50% 8%; }
+.folio__grid .folio__img:nth-child(2) { transform: translate(-50%, -50%) scale(1.18); z-index: 5; object-position: 60% 52%; }
+.folio__grid .folio__img:nth-child(3) { transform: translate(-50%, -50%) translateX(38vw) scale(0.82); z-index: 4; object-position: 62% 18%; }
 
-/* Mobile: swipeable 3-video coverflow carousel above the photo row. Active
+/* Mobile: swipeable 3-video coverflow carousel below the photo row. Active
    (center) card is bigger, the two neighbors are smaller and peek from the
    sides; drag/swipe loops forever in both directions. */
 .folio__carousel {
   position: relative;
   height: 92vw;
   max-height: 420px;
-  margin: 4px -20px 14px;
+  margin: 0 -20px 14px;
   overflow: hidden;
   touch-action: pan-y;
   cursor: grab;
@@ -538,9 +540,21 @@ a { color: inherit; text-decoration: none; }
   .nav__links { gap: 30px; font-size: 12px; }
   .folio, .contact, .footer, .page { padding-left: 32px; padding-right: 32px; }
   .folio { padding-top: 110px; padding-bottom: 110px; }
-  .folio__grid { gap: 20px; }
+  .folio__grid {
+    position: static;
+    height: auto;
+    max-height: none;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: center;
+  }
   .folio__carousel { display: none; }
-  .folio__img { height: 300px; aspect-ratio: auto; }
+  .folio__img { position: static; width: 100%; max-width: none; height: 300px; aspect-ratio: auto; transform: none; z-index: auto; }
+  .folio__grid .folio__img:nth-child(1),
+  .folio__grid .folio__img:nth-child(2),
+  .folio__grid .folio__img:nth-child(3) { transform: none; z-index: auto; aspect-ratio: auto; }
   .folio__img--tall { height: 400px; margin-top: -34px; }
   .contact { padding-top: 110px; }
   .videos { grid-template-columns: repeat(2, 1fr); gap: 20px; }
